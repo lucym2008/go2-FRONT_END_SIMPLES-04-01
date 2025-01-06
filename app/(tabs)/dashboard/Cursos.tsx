@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,18 +7,22 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Modal,
+  Text,
+  Pressable,
 } from 'react-native';
-import { Modal,  Text, Button } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 import ListItem from '../../ListHome/components/ListItem';
 import results from '../../ListHome/results';
+import { ActionModal } from '../../../src/COMPONENTS/actionModal';
 
 const App = () => {
   const [searchText, setSearchText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null); // Adicionando estado para o item selecionado
   const [list, setList] = useState(results);
 
   useEffect(() => {
@@ -43,9 +46,7 @@ const App = () => {
     setList(newList);
   };
 
-  const CreateVaga = () => {
-
-  };
+  const CreateVaga = () => {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,41 +70,43 @@ const App = () => {
       <FlatList
         data={list}
         style={styles.list}
-        renderItem={({ item }) => <ListItem data={item} />}
-        keyExtractor={(item) => item.id}
-        onPress={() => setModalVisible(true)}
+        renderItem={({ item }) => (
+          <Pressable onPress={() => {
+            setSelectedItem(item);  // Define o item selecionado
+            setModalVisible(true);   // Abre o modal
+          }}>
+            <ListItem data={item} />
+          </Pressable>
+        )}
+        keyExtractor={(item) => item.id.toString()}
       />
+
+      {/* Modal */}
       <Modal
-        animationType="slide"
-        transparent={true}
         visible={modalVisible}
+        transparent={true}
         onRequestClose={() => setModalVisible(false)}
+        animationType='slide'
       >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text>Este é um modal!</Text>
-            <Button title="Fechar" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
+        {/* Passando o item selecionado para o ActionModal */}
+        <ActionModal
+          fecharModal={() => setModalVisible(false)}
+          item={selectedItem}  // Passando o item selecionado para o modal
+        />
       </Modal>
 
-<TouchableOpacity>
-        <AntDesign 
-        name="pluscircle" 
-        size={43} 
-        color="#ACA446" 
-          style={{
-            position:"absolute",
-            alignSelf:"flex-end",
-            top:"87%",
-            padding: 20
-          }}
+      {/* Botão flutuante para criação */}
+      <TouchableOpacity>
+        <AntDesign
+          name="pluscircle"
+          size={43}
+          color="#ACA446"
+          style={styles.floatingButton}
         />
       </TouchableOpacity>
 
       <StatusBar style="light" />
     </SafeAreaView>
-
   );
 };
 
@@ -140,12 +143,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semi-transparente
   },
-  modalContainer: {
-    backgroundColor: 'white',
+  floatingButton: {
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    top: '87%',
     padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    width: 300,
   },
 });
 

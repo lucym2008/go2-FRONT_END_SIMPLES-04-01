@@ -1,5 +1,5 @@
 // 'PAGINA INICIAL'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router'; //TENTANDO FAZER A NAVEGAÇÃO
@@ -10,27 +10,31 @@ export default function Index() {
   const router = useRouter(); // Hook para navegação
 
   return (
-    <View style={Start.container} Dark>
-
+    <View style={Start.container}>
       <View style={Start.card}>
-
           <View style={Start.Card}>
-
             <Text style={Start.Title}>Seja Bem-Vindo</Text>
             <Text style={Start.SubTitle}>Go 2 Work, onde poderemos te ajudar a encontrar o seu lugar desejado</Text>
 
           <TouchableOpacity
             activeOpacity={.80}
             style={Start.btn}
-            onPress={() => {router.replace('dashboard')}} >
+            onPress={() => {router.replace('/Login')}} > 
               <Text style={Start.btnText}>Entrar em uma conta</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
             activeOpacity={.80}
             style={Start.btn}
-            onPress={() => {router.replace('Create')}} >
+            onPress={() => {router.replace('/Create')}} >
               <Text style={Start.btnText}>Criar uma conta</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+            style={Start.btn}
+            onPress={() => {router.replace('/dashboard')}}
+            >
+              <Text>Entrada Gratuita</Text>
             </TouchableOpacity>
 
         </View>

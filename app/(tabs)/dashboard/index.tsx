@@ -1,88 +1,154 @@
+// #F4FF41 - Amarelo Exadecimal
+
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { useState, useEffect } from 'react';
 import {
+  SafeAreaView,
   View,
+  TextInput,
+  FlatList,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { Text, Button } from 'react-native';
-import { Router } from 'expo-router';
+import { Modal,  Text, Button } from 'react-native';
 
-import { colors } from '../../../src/COMPONENTS/global';
-import { Botão2 } from '../../../src/COMPONENTS/Botão';
-import { useRouter } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
+import ListItem from '../../ListHome/components/ListItem';
+import results from '../../ListHome/results';
 
-export default function index(){
-  const router = useRouter(); // Hook para navegação
+const App = () => {
+  const [searchText, setSearchText] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [list, setList] = useState(results);
 
-  const Criar1 = () =>{
-    router.push('Cursos')
-  }
-  const Criar2 = () =>{
-    router.replace('Cursos')
-  }
-  const Criar3 = () =>{
-    router.replace('Create_vaga')
-  }
-  return(
-    <View style={styles.container}>
-      <View style={styles.TopArea}>
-        <Text style={styles.TitleTop}>Go 2 Work</Text>
-        <Text style={styles.description}>Aqui vc podera procurar sua vaga de emprego clt ou frellancer,
-            e ate mesmo se inscrever em um curso para aumentar seu conhecimento.</Text>
-        <View style={styles.sub}>
-            <Text style={styles.SubTitle}>Opções de inscrição</Text>
-              <Botão2 onPress={Criar1}>
-                <Text style={{color: "#fff", fontSize: 17}}>Vagas de emprego ClT ou freelancer</Text>
-              </Botão2>
-              <Botão2 onPress={Criar2}>
-                <Text style={{color: "#fff", fontSize: 17}}>Cursos profissionalizantes</Text>
-              </Botão2>
-        </View>
-        <View style={styles.sub}>
-            <Text style={styles.SubTitle}>Criar vaga</Text>
-            <Botão2 onPress={Criar3}>
-                <Text style={{color: "#fff", fontSize: 17}}>Escolha oque criar</Text>
-            </Botão2>
-        </View>
+  useEffect(() => {
+    if (searchText === '') {
+      setList(results);
+    } else {
+      setList(
+        results.filter(
+          (item) =>
+            item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+        )
+      );
+    }
+  }, [searchText]);
+
+  const handleOrderClick = () => {
+    let newList = [...results];
+
+    newList.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+
+    setList(newList);
+  };
+
+  const CreateVaga = () => {
+
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.searchArea}>
+        <TextInput
+          style={styles.input}
+          placeholder="Pesquise uma Vaga"
+          placeholderTextColor="#888"
+          value={searchText}
+          onChangeText={(t) => setSearchText(t)}
+        />
+        <TouchableOpacity onPress={handleOrderClick} style={styles.orderButton}>
+          <MaterialCommunityIcons
+            name="order-alphabetical-ascending"
+            size={32}
+            color="#888"
+          />
+        </TouchableOpacity>
       </View>
-    </View>
-  )
-}
+
+      <FlatList
+        data={list}
+        style={styles.list}
+        renderItem={({ item }) => <ListItem data={item} />}
+        keyExtractor={(item) => item.id}
+        onPress={() => setModalVisible(true)}
+      />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text>Este é um modal!</Text>
+            <Button title="Fechar" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+<TouchableOpacity>
+        <AntDesign 
+        name="pluscircle" 
+        size={43} 
+        color="#ACA446" 
+          style={{
+            position:"absolute",
+            alignSelf:"flex-end",
+            top:"87%",
+            padding: 20
+          }}
+        />
+      </TouchableOpacity>
+
+      <StatusBar style="light" />
+    </SafeAreaView>
+
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.back,
+    backgroundColor: '#242425',
   },
-  TopArea:{
-    width: "100%",
-    height: 340,
-    alignItems: "center",
+  input: {
+    flex: 1,
+    height: 50,
+    backgroundColor: '#363636',
+    margin: 30,
+    borderRadius: 5,
+    fontSize: 19,
+    paddingLeft: 15,
+    paddingRight: 15,
+    color: '#FFFFFF',
   },
-  TitleTop:{
-    fontSize: 55,
-    color: "#ffffff",
-    margin: 15,
+  searchArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  description:{
-    color: colors.Text,
-    textAlign: "justify",
-    paddingInline: 16,
-    paddingBottom: 20,
-    fontSize: 16,
+  orderButton: {
+    width: 32,
+    marginRight: 30,
   },
-  sub:{
-    paddingTop: 20,
-    width: "100%",
-    maxHeight: 230,
-    backgroundColor: colors.back,
-    alignItems: "center"
+  list: {
+    flex: 1,
   },
-  SubTitle:{
-    color: colors.titleW,
-    fontSize: 20,
-    marginLeft: 20
-  }
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semi-transparente
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: 300,
+  },
 });
+
+export default App;

@@ -1,7 +1,7 @@
 // 'INDEX DE LOGIN'
 import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
-import { useRouter } from 'expo-router'; //TENTANDO FAZER A NAVEGAÇÃO
+import { useRouter, Link } from 'expo-router'; //TENTANDO FAZER A NAVEGAÇÃO
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { TxtInput } from '../src/COMPONENTS/Input';
@@ -15,7 +15,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
 
   async function handleSignIn() {
-    if (email === "2" && nome === "1") {  // Verifica se o e-mail não está vazio
+    if (email === "12345678" && nome === "leonardo@email.com") {  // Verifica se o e-mail não está vazio
         router.replace('/dashboard');
     } else {
         alert("Por favor, insira um e-mail válido.");
@@ -26,7 +26,7 @@ export default function Login() {
 
       <View style={Style.cardTop}>
         <TouchableOpacity
-        onPress={() => { router.replace('Index')}} //não pega ainda
+        onPress={() => { router.replace('Create')}} //não pega ainda
         >
           <AntDesign name="caretleft" size={35} color="white"style={Style.icon}/>
         </TouchableOpacity>
@@ -39,14 +39,14 @@ export default function Login() {
 
           <Text style={Style.text}>Digite seu email:</Text>
             <TxtInput
-                placeholder="Digite algo aqui"
+                placeholder="Email"
                 value={nome}
                 onChangeText={setNome} // Atualiza o estado text1
           />
 
-          <Text style={Style.text}>Digite seu email:</Text>
+          <Text style={Style.text}>Digite sua senha:</Text>
             <TxtInput
-                placeholder="Digite algo aqui"
+                placeholder="Senha"
                 value={email}
                 onChangeText={setEmail} // Atualiza o estado text1
           />
@@ -62,7 +62,7 @@ export default function Login() {
         <TouchableOpacity 
         onPress={() => { router.replace('/index') }}
         >
-        <Text style={Style.textBottom} >Não tem conta? crie aqui agora!</Text>
+        <Text style={Style.textBottom} >Não tem conta? <Link href={"/Create"} style={Style.links}>crie aqui agora!</Link></Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -111,5 +111,9 @@ const Style = StyleSheet.create({
   textBottom:{
     fontSize: 17,
     top: 180,
+  },
+
+  links:{
+    color: "#ACA465",
   },
 })

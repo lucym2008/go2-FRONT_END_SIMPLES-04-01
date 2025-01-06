@@ -3,18 +3,16 @@ import { Tabs } from "expo-router";
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { useRouter } from "expo-router";
 
 
 import { StyleSheet } from "react-native";
 import { colors } from "../../../src/COMPONENTS/global";
 
 export default function Layout() {
-  const router = useRouter(); // Hook para navegação
 
     return (
         <Tabs
-        screenOptions={{
+screenOptions={{
         tabBarStyle: {
           position: 'absolute',
           bottom: 8, // distancia da parte inferior da tela
@@ -34,21 +32,13 @@ export default function Layout() {
             <Tabs.Screen 
             name="index" 
             options={{ 
-                //headerShown: false, 
-                headerTitle: "",
+                // headerShown: false, 
+                title: "",
                 headerTitleStyle: {
                    color: "#fff"
                 },
-                // headerRight: () => (
-                //   <AntDesign
-                //     name="setting"
-                //     size={24}
-                //     color="white"
-                //     style={{ marginRight: 15 }}
-                //     onPress={() => router.replace('dashboard/Account')}
-                //   />),
                 headerStyle: {
-                    backgroundColor: '#242420', // Cor de fundo do header
+                    backgroundColor: '#242420', // Cor de fundo do header (azul)
                   },            
                 tabBarLabelStyle: { 
                    fontSize: 12, // ajuste o tamanho da fonte aqui
@@ -90,7 +80,7 @@ export default function Layout() {
             // headerShown: false, 
             title: "",
             headerTitleStyle: {
-              color: "#fff"
+               color: "#fff"
             },
             headerStyle: {
                 backgroundColor: '#242420', // Cor de fundo do header (azul)
@@ -101,6 +91,7 @@ export default function Layout() {
             },
             tabBarIcon: ({ size, color, focused }) => {
                 return <AntDesign name='pluscircle' color={color} size={30} top={5}/>
+                
             },
         }}
         />
@@ -122,36 +113,7 @@ export default function Layout() {
           }}
         />
 
-      <Tabs.Screen
-        name="CriarStartup"
-        options={{
-          title: "",
-          headerStyle: {
-            backgroundColor: '#242420', // Cor de fundo do header
-          },  
-        }}
-      />
-      <Tabs.Screen
-        name="CriarVaga"
-        options={{
-          headerTitle: "",
-          title: 'Profile',
-          headerStyle: {
-            backgroundColor: '#242420', // Cor de fundo do header
-          },  
-        }}
-      />
-      <Tabs.Screen
-        name="CriarCurso"
-        options={{
-          headerStyle: {
-            backgroundColor: colors.back
-          }
-        }}
-      />
-
       </Tabs>
-      
     );
 
 }

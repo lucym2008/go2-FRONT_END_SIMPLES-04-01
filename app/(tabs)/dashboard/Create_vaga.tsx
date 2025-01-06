@@ -11,33 +11,85 @@ import { TextArea } from '../../../src/COMPONENTS/TextArea';
 
 export default function Create_vaga() {
 
+    const [vaga, setVaga] = useState('');
+    const [empresa, setEmpresa] = useState('');
+    const [salario, setSalario] = useState('');
+    const [requisitos, setRequisitos] = useState('');
+    const [localizacao, setLocalizacao] = useState('');
+    const [observacoes, setobservacoes] = useState('');
   
-    const EnterCriarVaga = () => {
-      router.push('/CriarVaga')
-    }; 
-    const EnterCriarCurso = () => {
-      router.push('/CriarCurso')
-    }; 
-    const EnterCriarStartup = () => {
-      router.push('/CriarStartup')
+    const Save = () => {
+      if (vaga === ''  || empresa === '' || salario === '' || requisitos === '' || localizacao === ''
+      ) {  // Verifica se o e-mail não está vazio;
+        alert("Por favor, Preencha todos os campos.")
+      } else if (isNaN(Number(salario))) {
+        return Alert.alert("Salario","O salario precisa ser um número!")
+      } else {
+        Alert.alert("Parabens!","Vaga publicada com sucesso")
+        return router.replace('/dashboard')
+      }
     }; 
   
       return(
       <View style={styles.container}>
   
           <View style={styles.box}>
+            <Text style={styles.Title}>Criação de vagas</Text>
+              <InputWhite
+                  placeholder="Qual o nome da vaga?" 
+                  placeholderTextColor={"#FFFFFF"}
+                  value={vaga}
+                  onChangeText={setVaga} // Atualiza o estado text1
+              >
+              </InputWhite>
+  
+              <InputWhite
+                  placeholder="De qual empresa ou ordem faz parte?" 
+                  placeholderTextColor={"#FFFFFF"}
+                  value={empresa}
+                  onChangeText={setEmpresa}
+              >
+              </InputWhite>
+  
+              <InputWhite
+                  placeholder="Salario oferecido:" 
+                  placeholderTextColor={"#FFFFFF"}
+                  value={salario}
+                  onChangeText={setSalario}
+              >
+              </InputWhite>
+  
+              <InputWhite
+                  placeholder="Requisitos do cargo:" 
+                  placeholderTextColor={"#FFFFFF"}
+                  value={requisitos}
+                  onChangeText={setRequisitos}
+              >
+              </InputWhite>
+  
+              <InputWhite
+                  placeholder="Localização:" 
+                  placeholderTextColor={"#FFFFFF"}
+                  value={localizacao}
+                  onChangeText={setLocalizacao}
+              >
+              </InputWhite>
+  
+              <TextArea
+                  placeholder="Observações:" 
+                  placeholderTextColor={"#FFFFFF"}
+                  multiline={true} // Permite múltiplas linhas de texto
+                  numberOfLines={5} // Define a altura inicial em número de linhas
+                  value={observacoes}
+                  onChangeText={setobservacoes}
+              >
+              </TextArea>
+  
             
-          <Text style={styles.Title}>Criação de Proposta</Text>
-
-              <Botão onPress={EnterCriarVaga}>
-                <Text style={{color: "#fff", fontSize: 20}}>Cria vaga CLT</Text>
+              <Botão onPress={Save}>
+                <Text style={{color: "#fff", fontSize: 20}}>Salvar cargo</Text>
               </Botão>
-              <Botão onPress={EnterCriarStartup}>
-                <Text style={{color: "#fff", fontSize: 20}}>Cria vaga Startup</Text>
-              </Botão>
-              <Botão onPress={EnterCriarCurso}>
-                <Text style={{color: "#fff", fontSize: 20}}>Cria vaga de curso</Text>
-              </Botão>
+  
           </View>
       </View>
       );
@@ -57,9 +109,10 @@ export default function Create_vaga() {
           alignItems: 'center',
       },
       Title:{
-        fontSize: 40,
+        fontSize: 45,
         color: colors.titleW,
-        marginBottom: 50,
+        marginBottom: 10,
+        paddingRight: 40,
       },
       SubTitle:{
         fontSize: 24,

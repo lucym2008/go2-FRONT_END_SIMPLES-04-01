@@ -5,53 +5,56 @@ import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity , Alert} from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter, Link } from 'expo-router'; //TENTANDO FAZER A NAVEGAÇÃO
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../src/firebase/config'
 
 import { StyleSheet } from 'react-native';
 import { Botão } from '../src/COMPONENTS/Botão';
 import { colors } from '../src/COMPONENTS/global';
+import  LoadingModal  from '../src/utils/LoadingModal'
 
 
 export default function Create() {
   const router = useRouter(); // Hook para navegação
 
-  const [nome, setNome] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [numero, setNumero] = useState('');
   const [password, setPassword] = useState('');
-  const [empresa, setEmpresa] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  if (isNaN(Number(numero))) {
-    return Alert.alert("Numero", "A numero precisa ser um número!")
-  }
-
-  async function handleSignIn() {
-    if (nome === '' || email === '' ||numero === '' || password === '' || empresa === '' 
-    ) {  // Verifica se o e-mail não está vazio;
-      alert("Por favor, Preencha todos os campos.");
-    } else {
-      router.replace('/dashboard')
+  const onRegisterPress = async () => {
+    if (password !== confirmPassword) {
+        alert("Passwords don't match.");
+        return;
     }
-  }
 
-  const Out = () => {
-    
-  }
+    setIsLoading(true);
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = userCredential.user.uid;
+        const data = {
+            id: uid,
+            email,
+            fullName,
+        };
+        
+        await setDoc(doc(db, 'users', uid), data);
+        
+        // Navegar para a página "Home"
+        router.replace('/dashboard')
+      
+    } catch (error) {
+        alert('VOLE PASSOU');
+    } finally {
+        setIsLoading(false);
+    }
+}
   return (
     <View style={styles.container}>
 
       <View style={styles.cardTop}>
-
-      <TouchableOpacity 
-  onPress={() => {
-    router.replace('Index'); // Substituir a rota
-    Out(); // Função adicional
-  }} 
-  style={styles.icon} // Estilo opcional para posicionar o ícone
->
-  <AntDesign name="caretleft" size={30} color="white" style={styles.icon} />
-</TouchableOpacity>
-
-
       </View>
 
       <View style={styles.cardBottom}>
@@ -62,47 +65,38 @@ export default function Create() {
             <TextInput
                 style={styles.input}
                 placeholder="Digite seu nome"
-                value={nome}
-                onChangeText={setNome} // Atualiza o estado text1
+                onChangeText={(text) => setFullName(text)}
+                value={fullName}
             />
 
             <TextInput
                 style={styles.input}
                 placeholder="Digite seu email"
+                onChangeText={(text) => setEmail(text)}
                 value={email}
-                onChangeText={setEmail} // Atualiza o estado text1
-            />
-
-            <TextInput
-                style={styles.input}
-                placeholder="Digite seu numero"
-                value={numero}
-                onChangeText={setNumero} // Atualiza o estado text1
             />
 
             <TextInput
                 style={styles.input}
                 placeholder="Digite sua senha"
+                onChangeText={(text) => setPassword(text)}
                 value={password}
-                onChangeText={setPassword} // Atualiza o estado text1
             />
 
             <TextInput
                 style={styles.input} 
                 placeholder="voçe busca representar uma empresa?"
-                value={empresa}
-                onChangeText={setEmpresa} // Atualiza o estado text1
+                onChangeText={(text) => setConfirmPassword(text)}
+                value={confirmPassword}
             />
 
             <Botão
             activeOpacity={.80}
-            onPress={handleSignIn} >
+            onPress={onRegisterPress}>
               <Text style={styles.btnText}>Entrar</Text>
             </Botão>
 
         </View>
-
-        <Text style={styles.textBottom}>Ja tem uma conta? Entre aqui!</Text>
       </View>
     </View>
   );
@@ -172,4 +166,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     top: "50%",
   },
-}) 
+
+  links:{
+    color: "#ACA465",
+  },
+})

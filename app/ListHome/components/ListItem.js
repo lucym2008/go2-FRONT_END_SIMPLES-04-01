@@ -8,8 +8,6 @@ const ListItem = ({ data }) => {
       <View style={styles.itemInfo}>
         <Text style={styles.itemP1}>{data.name}</Text>
         <Text style={styles.itemP2}>{data.email}</Text>
-        <Text style={styles.itemP2}>{data.name}</Text>
-        <Text style={styles.itemP2}>{data.email}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -29,7 +27,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 30,
-    Top: 20,
   },
   itemInfo: {
     marginLeft: 20,
